@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Daniel Vigovszky <daniel.vigovszky@gmail.com>"]
 
 [dependencies]
+multiarray = "0.1.3"
