@@ -1,8 +1,7 @@
 use std::collections::HashSet;
-use std::env;
-use std::io::prelude::*;
 use std::iter::FromIterator;
-use std::fs::File;
+
+use common;
 
 fn is_valid_1(s: &str) -> bool {
     let all_words: Vec<&str> = s.split(' ').collect();
@@ -25,13 +24,7 @@ fn is_valid_2(s: &str) -> bool {
 }
 
 pub fn run() {
-    let mut path = env::current_dir().unwrap();
-    path.push("data");
-    path.push("day4.txt");
-
-    let mut file = File::open(path).expect("Unable to open the file");
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).expect("Unable to read the file");
+    let contents = common::read_data("day4.txt");
 
     let all_lines: Vec<&str> = contents.split("\n").collect();
     let valid_lines_1: Vec<&&str> = all_lines.iter().filter(|&s|is_valid_1(s)).collect();
