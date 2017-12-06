@@ -6,7 +6,7 @@ struct Machine {
     modifier: fn(i32) -> i32
 }
 
-fn modifier1(offset: i32) -> i32 {
+fn modifier1(_offset: i32) -> i32 {
     return 1;
 }
 
@@ -47,6 +47,7 @@ impl Machine {
         return steps;
     }
 
+    #[allow(dead_code)]
     fn dump(&self) {
         println!("position: {}", self.position);
         print!  ("memory  : ");
