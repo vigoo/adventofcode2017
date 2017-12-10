@@ -7,3 +7,4 @@ authors = ["Daniel Vigovszky <daniel.vigovszky@gmail.com>"]
 multiarray = "0.1.3"
 regex = "0.2.3"
 lazy_static = "1.0.0"
+hex = "0.3.1"
