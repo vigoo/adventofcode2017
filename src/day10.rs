@@ -84,6 +84,19 @@ fn example() {
     println!("{:?}", state.list)
 }
 
+pub fn knot_hash(s: &str) -> Vec<u8> {
+    let mut input: Vec<usize> = s.chars().map(|ch| ch as usize).collect();
+    for &i in vec![17, 31, 73, 47, 23].iter() {
+        input.push(i as usize);
+    }
+    let mut state = State::new(256);
+    for _ in 0..64 {
+        state.run(&input);
+    }
+
+    return state.dense_hash();
+}
+
 fn part1() {
     let mut state = State::new(256);
     state.run(&vec![14,58,0,116,179,16,1,104,2,254,167,86,255,55,122,244]);
@@ -92,17 +105,7 @@ fn part1() {
 }
 
 fn part2() {
-    let mut input: Vec<usize> = "14,58,0,116,179,16,1,104,2,254,167,86,255,55,122,244".chars().map(|ch| ch as usize).collect();
-    for &i in vec![17, 31, 73, 47, 23].iter() {
-        input.push(i as usize);
-    }
-
-    let mut state = State::new(256);
-    for _ in 0..64 {
-        state.run(&input);
-    }
-
-    let dense_hash = state.dense_hash();
+    let dense_hash = knot_hash("14,58,0,116,179,16,1,104,2,254,167,86,255,55,122,244");
     let mut result = String::new();
     dense_hash.write_hex(&mut result).expect("Hex conversion failed");
     println!("Day 10 result 2: {}", result);
