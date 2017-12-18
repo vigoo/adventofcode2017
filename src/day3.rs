@@ -9,13 +9,13 @@ struct Coord {
 
 impl PartialEq for Coord {
     fn eq(&self, other: &Coord) -> bool {
-        return self.x == other.x && self.y == other.y;
+        self.x == other.x && self.y == other.y
     }
 }
 
 impl Coord {
     pub fn manhattan_distance(&self, other: &Coord) -> u32 {
-        return ((self.x - other.x).abs() + (self.y - other.y).abs()) as u32;
+        ((self.x - other.x).abs() + (self.y - other.y).abs()) as u32
     }
 
     pub fn left(&self) -> Coord {
@@ -42,15 +42,15 @@ struct CoordinateSystem {
 }
 
 impl CoordinateSystem {
-    pub fn new() -> CoordinateSystem {
-        return CoordinateSystem {
+    pub fn new() -> Self {
+        CoordinateSystem {
             cache: HashMap::new()
         }
     }
 
     pub fn coords_of(&mut self, n: u32) -> Coord {
         let result: &Coord = self.cache.entry(n.to_owned()).or_insert_with(|| { return CoordinateSystem::calc_coords_of(n) });
-        return *result;
+        *result
     }
 
     fn calc_coords_of(n: u32) -> Coord {
@@ -87,19 +87,20 @@ impl CoordinateSystem {
                 }
             }
         }
-        return result;
+
+        result
     }
 }
 
 fn calc_value(squares: &HashMap<Coord, u32>, coord: &Coord) -> u32 {
-    return squares.get(&coord.left()).unwrap_or(&0) +
-           squares.get(&coord.right()).unwrap_or(&0) +
-           squares.get(&coord.up()).unwrap_or(&0) +
-           squares.get(&coord.down()).unwrap_or(&0) +
-           squares.get(&coord.left().up()).unwrap_or(&0) +
-           squares.get(&coord.right().up()).unwrap_or(&0) +
-           squares.get(&coord.left().down()).unwrap_or(&0) +
-           squares.get(&coord.right().down()).unwrap_or(&0);
+    squares.get(&coord.left()).unwrap_or(&0) +
+    squares.get(&coord.right()).unwrap_or(&0) +
+    squares.get(&coord.up()).unwrap_or(&0) +
+    squares.get(&coord.down()).unwrap_or(&0) +
+    squares.get(&coord.left().up()).unwrap_or(&0) +
+    squares.get(&coord.right().up()).unwrap_or(&0) +
+    squares.get(&coord.left().down()).unwrap_or(&0) +
+    squares.get(&coord.right().down()).unwrap_or(&0)
 }
 
 fn find_first_larger_cell(csys: &mut CoordinateSystem, than: u32) -> u32 {
@@ -116,7 +117,7 @@ fn find_first_larger_cell(csys: &mut CoordinateSystem, than: u32) -> u32 {
         squares.insert(coord, value);
     }
 
-    return value;
+    value
 }
 
 fn debug(csys: &mut CoordinateSystem, n: u32) {

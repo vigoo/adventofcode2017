@@ -18,7 +18,7 @@ fn read_matrix(input: &str) -> Array2D<u16> {
         }
     }
 
-    return result;
+    result
 }
 
 fn min_max_in(lane: Array1DRef<u16>) -> (u16, u16) {
@@ -31,7 +31,7 @@ fn min_max_in(lane: Array1DRef<u16>) -> (u16, u16) {
         max = Some(cmp::max(*item, max.unwrap_or(*item)));
     }
 
-    return (min.unwrap(), max.unwrap());
+    (min.unwrap(), max.unwrap())
 }
 
 fn sum_of_divided(lane: Array1DRef<u16>) -> u32 {
@@ -51,7 +51,7 @@ fn sum_of_divided(lane: Array1DRef<u16>) -> u32 {
         }
     }
 
-    return sum;
+    sum
 }
 
 pub fn run() {

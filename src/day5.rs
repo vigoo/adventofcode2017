@@ -7,24 +7,24 @@ struct Machine {
 }
 
 fn modifier1(_offset: i32) -> i32 {
-    return 1;
+    1
 }
 
 fn modifier2(offset: i32) -> i32 {
     if offset >= 3 {
-        return -1;
+        -1
     } else {
-        return 1;
+        1
     }
 }
 
 impl Machine {
-    fn new(initial_offsets: Vec<i32>, modifier: fn(i32) -> i32) -> Machine {
-        return Machine {
+    fn new(initial_offsets: Vec<i32>, modifier: fn(i32) -> i32) -> Self {
+        Machine {
             jumps: initial_offsets,
             position: 0,
             modifier
-        };
+        }
     }
 
     fn step(&mut self) -> bool {
@@ -33,9 +33,10 @@ impl Machine {
             let offset: i32 = self.jumps[position];
             self.jumps[position] += (self.modifier)(offset);
             self.position += offset;
-            return true;
+
+            true
         } else {
-            return false;
+            false
         }
     }
 
@@ -44,7 +45,8 @@ impl Machine {
         while self.step() {
             steps += 1;
         }
-        return steps;
+
+        steps
     }
 
     #[allow(dead_code)]

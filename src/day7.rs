@@ -7,13 +7,13 @@ use std::collections::HashMap;
 #[derive(Clone, Debug)]
 struct Program {
     name: String,
-    weigth: i32,
+    weight: i32,
     parent: Option<String>,
     children: Vec<String>
 }
 
 impl Program {
-    pub fn from_line(line: &str) -> Program {
+    pub fn from_line(line: &str) -> Self {
         lazy_static! {
             static ref RE: Regex = Regex::new(r#"([a-z]+) \((\d+)\)( -> ([a-z, ]+))?"#).unwrap();
         }
@@ -29,9 +29,9 @@ impl Program {
             .map(|s| String::from(s))
             .collect();
 
-        return Program {
+        Program {
             name: String::from(name),
-            weigth,
+            weight: weigth,
             parent: None,
             children: child_names
         }
@@ -56,7 +56,7 @@ fn create_map(programs: &Vec<Program>) -> HashMap<String, Program> {
         result.insert(program.name.clone(), program.clone());
     }
 
-    return result;
+    result
 }
 
 fn find_outlier(weights: &Vec<i32>) -> (i32, i32) {
@@ -74,11 +74,11 @@ fn find_outlier(weights: &Vec<i32>) -> (i32, i32) {
     let (wgood, _) = pairs[0];
     let (wbad, _) = pairs[1];
 
-    return (*wgood, *wbad);
+    (*wgood, *wbad)
 }
 
 impl Tree {
-    pub fn from_programs(programs: &Vec<Program>) -> Tree {
+    pub fn from_programs(programs: &Vec<Program>) -> Self {
         let mut result = create_map(programs);
 
         // Setting parent references
@@ -91,11 +91,11 @@ impl Tree {
             }
         }
 
-        return Tree { programs: result };
+        Tree { programs: result }
     }
 
     pub fn root(&self) -> Option<&Program> {
-        return match self.programs.iter().find(|&(_name, program)| program.parent.is_none()) {
+        match self.programs.iter().find(|&(_name, program)| program.parent.is_none()) {
             Some((_name, program)) => Some(program),
             None => None
         }
@@ -103,16 +103,16 @@ impl Tree {
 
     pub fn total_weight(&self, program: &Program) -> i32 {
         if program.children.is_empty() {
-            return program.weigth;
+            program.weight
         } else {
             let child_weights: i32 = program.children.iter().map(|child| self.total_weight(self.programs.get(child).unwrap())).sum();
-            return program.weigth + child_weights;
+            program.weight + child_weights
         }
     }
 
     pub fn find_correction(&self, program: &Program) -> Option<Correction> {
         if program.children.is_empty() {
-            return None;
+            None
         } else {
             let weights: Vec<i32> = program.children.iter().map(|child| self.total_weight(self.programs.get(child).unwrap())).collect();
             let children_corrections: Vec<Option<Correction>> = program.children.iter().map(|child| self.find_correction(self.programs.get(child).unwrap())).collect();
@@ -120,7 +120,7 @@ impl Tree {
             let weights_good = weights.iter().all(|w| *w == weights[0]);
 
             if children_balanced && weights_good {
-                return None;
+                None
             } else {
                 if children_balanced && !weights_good {
                     for idx in 0..weights.len() {
@@ -130,17 +130,17 @@ impl Tree {
 
                         if weights[idx] == wrong_weight {
                             let diff = wrong_weight - good_weight;
-                            return Some(Correction { program: child.name.clone(), correction: child.weigth - diff });
+                            return Some(Correction { program: child.name.clone(), correction: child.weight - diff });
                         }
                     }
 
-                    return None;
+                    None
 
                 } else {
                     let cs: Vec<Correction> = children_corrections
                         .iter().filter(|c| c.is_some())
                         .map(|c| c.clone().unwrap().clone()).collect();
-                    return cs.first().map(|c| c.clone());
+                    cs.first().map(|c| c.clone())
                 }
             }
         }

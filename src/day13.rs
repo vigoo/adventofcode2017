@@ -6,15 +6,16 @@ struct LayerSpec {
 }
 
 impl LayerSpec {
-    pub fn parse(line: &str) -> LayerSpec {
+    pub fn parse(line: &str) -> Self {
         let parts: Vec<&str> = line.split(":").map(|s| s.trim()).collect();
-        return LayerSpec {
+        LayerSpec {
             idx: parts[0].parse::<usize>().unwrap(),
             range: parts[1].parse::<i32>().unwrap()
         }
     }
 }
 
+#[derive(Clone)]
 struct LayerState {
     range: i32,
     state: i32,
@@ -22,16 +23,16 @@ struct LayerState {
 }
 
 impl LayerState {
-    pub fn empty() -> LayerState {
-        return LayerState {
+    pub fn empty() -> Self {
+        LayerState {
             range: 0,
             state: 0,
             direction: 0
-        };
+        }
     }
 
-    pub fn from(spec: &LayerSpec) -> LayerState {
-        return LayerState {
+    pub fn from(spec: &LayerSpec) -> Self {
+        LayerState {
             range: spec.range,
             state: 0,
             direction: 1
@@ -39,6 +40,7 @@ impl LayerState {
     }
 }
 
+#[derive(Clone)]
 struct Simulation {
     layers: Vec<LayerState>,
     position: usize,
@@ -47,7 +49,7 @@ struct Simulation {
 }
 
 impl Simulation {
-    pub fn init(specs: &Vec<LayerSpec>) -> Simulation {
+    pub fn init(specs: &Vec<LayerSpec>) -> Self {
         let layer_count = specs.iter().map(|spec| spec.idx).max().unwrap() + 1;
         let mut layers: Vec<LayerState> = Vec::with_capacity(layer_count);
         for _idx in 0..layer_count {
@@ -57,12 +59,12 @@ impl Simulation {
             layers[spec.idx] = LayerState::from(spec);
         }
 
-        return Simulation {
+        Simulation {
             layers,
             position: 0,
             total_severity: 0,
             caught: 0
-        };
+        }
     }
 
     fn step_layers(&mut self) {
@@ -84,7 +86,8 @@ impl Simulation {
         self.step_layers();
 
         self.position = self.position + 1;
-        return self.position != self.layers.len();
+
+        self.position != self.layers.len()
     }
 
     pub fn delay(&mut self, t: i32) {
@@ -110,9 +113,9 @@ impl Simulation {
     fn current_severity(&self) -> Option<i32> {
         let current_layer: &LayerState = &self.layers[self.position];
         if current_layer.range > 0 && current_layer.state == 0 {
-            return Some((self.position as i32) * current_layer.range);
+            Some((self.position as i32) * current_layer.range)
         } else {
-            return None;
+            None
         }
     }
 
@@ -163,20 +166,19 @@ fn part1(name: &str, layer_specs: &Vec<LayerSpec>, dump: bool) {
     println!("{} result 1: {}", name, simulation.total_severity);
 }
 
-fn try_with_delay(layer_specs: &Vec<LayerSpec>, delay: i32, dump: bool) -> bool {
-    println!("Trying with delay {}", delay);
-    let mut simulation = Simulation::init(layer_specs);
-    simulation.delay(delay);
+fn try_with_clone(from: &Simulation, dump: bool) -> bool {
+    let mut simulation = from.clone();
     simulation.run(true, dump);
-    println!();
     return simulation.caught == 0;
 }
 
 fn part2(name: &str, layer_specs: &Vec<LayerSpec>, dump: bool) {
     let mut delay = 0;
+    let mut current: Simulation = Simulation::init(layer_specs);
 
-    while !try_with_delay(layer_specs, delay, dump) {
+    while !try_with_clone(&current, dump) {
         delay = delay + 1;
+        current.delay(1);
     }
 
     println!("{} result 2: {}", name, delay);

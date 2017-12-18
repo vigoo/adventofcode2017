@@ -17,8 +17,8 @@ enum Step {
 }
 
 impl Step {
-    pub fn from_string(s: &str) -> Result<Step, Error> {
-        return match s {
+    pub fn from_string(s: &str) -> Result<Self, Error> {
+        match s {
             "n" => Ok(Step::North),
             "ne" => Ok(Step::NorthEast),
             "se" => Ok(Step::SouthEast),
@@ -26,7 +26,7 @@ impl Step {
             "sw" => Ok(Step::SouthWest),
             "nw" => Ok(Step::NorthWest),
             _ => Err(Error::CouldNotParseStep(String::from(s)))
-        };
+        }
     }
 }
 
@@ -38,13 +38,13 @@ struct Coords {
 
 impl PartialEq for Coords {
     fn eq(&self, other: &Coords) -> bool {
-        return self.x == other.x && self.y == other.y;
+        self.x == other.x && self.y == other.y
     }
 }
 
 impl Coords {
     pub fn apply_step(&mut self, step: &Step) {
-        return match step {
+        match step {
             &Step::North => self.apply_d(0, -2),
             &Step::NorthEast => self.apply_d(1, -1),
             &Step::SouthEast=> self.apply_d(1, 1),
@@ -57,7 +57,7 @@ impl Coords {
     pub fn step(&self, step: &Step) -> Coords {
         let mut cloned = self.clone();
         cloned.apply_step(step);
-        return cloned;
+        cloned
     }
 
     fn apply_d(&mut self, dx: i32, dy: i32) {
@@ -68,7 +68,7 @@ impl Coords {
     fn dist2(&self, other: &Coords) -> i64 {
         let dx: i64 = (other.x - self.x) as i64;
         let dy: i64 = (other.y - self.y) as i64;
-        return dx*dx + dy*dy;
+        dx*dx + dy*dy
     }
 }
 
@@ -81,35 +81,35 @@ struct SearchStep {
 
 impl PartialEq for SearchStep {
     fn eq(&self, other: &SearchStep) -> bool {
-        return self.state == other.state && self.history == other.history && self.cost == other.cost;
+        self.state == other.state && self.history == other.history && self.cost == other.cost
     }
 }
 
 impl Ord for SearchStep {
     fn cmp(&self, other: &SearchStep) -> cmp::Ordering {
-        return self.cost.partial_cmp(&other.cost).map(|o| o.reverse()).unwrap();
+        self.cost.partial_cmp(&other.cost).map(|o| o.reverse()).unwrap()
     }
 }
 
 impl PartialOrd for SearchStep {
     fn partial_cmp(&self, other: &SearchStep) -> Option<cmp::Ordering> {
-        return Some(self.cost.partial_cmp(&other.cost).map(|o| o.reverse()).unwrap());
+        Some(self.cost.partial_cmp(&other.cost).map(|o| o.reverse()).unwrap())
     }
 }
 
 impl SearchStep {
-    pub fn next(&self, step: &Step, goal: &Coords) -> SearchStep {
+    pub fn next(&self, step: &Step, goal: &Coords) -> Self {
         let next_state = self.state.step(step);
-        return SearchStep {
+        SearchStep {
             state: next_state,
             history: self.history + 1,
             cost: next_state.dist2(goal)
-        };
+        }
     }
 }
 
 fn valid_steps(_coords: &Coords) -> Vec<Step> {
-    return vec![Step::North, Step::NorthEast, Step::SouthEast, Step::South, Step::SouthWest, Step::NorthWest];
+    vec![Step::North, Step::NorthEast, Step::SouthEast, Step::South, Step::SouthWest, Step::NorthWest]
 }
 
 fn find_path(start: &Coords, goal: &Coords) -> u32 {
@@ -139,7 +139,7 @@ fn find_path(start: &Coords, goal: &Coords) -> u32 {
         }
     }
 
-    return result.unwrap().history;
+    result.unwrap().history
 }
 
 pub fn run() {

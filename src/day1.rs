@@ -3,7 +3,8 @@ fn compute(input: &str, shift: usize) -> u32 {
     let chars2: Vec<char> = input.chars().skip(shift).chain(input.chars().take(shift)).collect();
 
     let pairs = chars1.iter().zip(chars2.iter());
-    return pairs.map(|(a, b)| if a == b { a.to_digit(10).unwrap() } else { 0 }).sum();
+
+    pairs.map(|(a, b)| if a == b { a.to_digit(10).unwrap() } else { 0 }).sum()
 }
 
 pub fn run() {

@@ -7,18 +7,18 @@ struct State {
 
 impl PartialEq for State {
     fn eq(&self, other: &State) -> bool {
-        return self.banks.eq(&other.banks);
+        self.banks.eq(&other.banks)
     }
 }
 
 impl State {
-    fn new(banks: Vec<u32>) -> State {
-        return State { banks };
+    fn new(banks: Vec<u32>) -> Self {
+        State { banks }
     }
 
     fn find_max(&self) -> (usize, u32) {
         let (idx, max) = self.banks.iter().enumerate().min_by_key(|&(_, &value)| -(value as i32)).unwrap();
-        return (idx, max.clone());
+        (idx, max.clone())
     }
 
     fn redistribute(&mut self) {
@@ -64,7 +64,7 @@ fn count_redistribution_cycles(initial_state: &State, with_cycle_length: bool) -
         } else {
             None
         };
-    return (count, cycle_length);
+    (count, cycle_length)
 }
 
 fn example() {

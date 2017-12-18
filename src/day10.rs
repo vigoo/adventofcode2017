@@ -26,9 +26,9 @@ fn reverse_section<T : Clone>(list: &mut Vec<T>, start_index: usize, end_index: 
 }
 
 impl State {
-    pub fn new(elem_count: i32) -> State {
+    pub fn new(elem_count: i32) -> Self {
         let list: Vec<u8> = (0..elem_count).map(|v| v as u8).collect();
-        return State {
+        State {
             list,
             position: 0,
             skip_size: 0
@@ -62,7 +62,7 @@ impl State {
             result.push(code);
         }
 
-        return result;
+        result
     }
 
     #[allow(dead_code)]
@@ -94,7 +94,7 @@ pub fn knot_hash(s: &str) -> Vec<u8> {
         state.run(&input);
     }
 
-    return state.dense_hash();
+    state.dense_hash()
 }
 
 fn part1() {

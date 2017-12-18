@@ -6,7 +6,7 @@ use day10::knot_hash;
 fn row_map(row: u8, hash: &str) -> String {
     let hash = knot_hash(format!("{}-{}", hash, row).as_str());
     let parts: Vec<String> = hash.iter().map(|n| format!("{:8b}", n)).collect();
-    return parts.as_slice().join("");
+    parts.as_slice().join("")
 }
 
 fn usage_map(hash: &str) -> Array2D<bool> {
@@ -19,7 +19,7 @@ fn usage_map(hash: &str) -> Array2D<bool> {
         }
     }
 
-    return result;
+    result
 }
 
 fn traverse_region(visited: &mut Array2D<bool>, map: &Array2D<bool>, row: usize, col: usize) {
@@ -54,11 +54,11 @@ fn count_regions(hash: &str) -> i32 {
         }
     }
 
-    return region_count;
+    region_count
 }
 
 fn usage_count(row: &String) -> usize {
-    return row.chars().filter(|&ch| ch == '1').count();
+    row.chars().filter(|&ch| ch == '1').count()
 }
 
 pub fn run() {

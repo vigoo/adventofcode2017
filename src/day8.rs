@@ -19,14 +19,14 @@ struct Register {
 }
 
 impl Register {
-    pub fn from_string(s: &str) -> Register {
-        return Register { name: String::from(s) };
+    pub fn from_string(s: &str) -> Self {
+        Register { name: String::from(s) }
     }
 }
 
 impl PartialEq for Register {
     fn eq(&self, other: &Register) -> bool {
-        return self.name == other.name;
+        self.name == other.name
     }
 }
 
@@ -42,8 +42,8 @@ enum Condition {
 }
 
 impl Condition {
-    pub fn from_string(s: &str, register: Register, parameter: i32) -> Result<Condition, ParserError> {
-        return match s {
+    pub fn from_string(s: &str, register: Register, parameter: i32) -> Result<Self, ParserError> {
+        match s {
             ">" => Ok(Condition::Greater(register, parameter)),
             ">=" => Ok(Condition::GreaterOrEq(register, parameter)),
             "<" => Ok(Condition::Less(register, parameter)),
@@ -51,7 +51,7 @@ impl Condition {
             "==" => Ok(Condition::Equal(register, parameter)),
             "!=" => Ok(Condition::NotEqual(register, parameter)),
             _ => Err(ParserError::InvalidCondition)
-        };
+        }
     }
 
     pub fn all_used_registers(&self) -> HashSet<&Register> {
@@ -84,8 +84,8 @@ enum Instruction {
 }
 
 impl Instruction {
-    pub fn from_string(s: &str, register: Register, parameter: i32, condition: Condition) -> Result<Instruction, ParserError> {
-        return match s {
+    pub fn from_string(s: &str, register: Register, parameter: i32, condition: Condition) -> Result<Self, ParserError> {
+        match s {
             "inc" => Ok(Instruction::Increase(register, parameter, condition)),
             "dec" => Ok(Instruction::Decrease(register, parameter, condition)),
             _ => Err(ParserError::InvalidInstruction)
@@ -94,7 +94,7 @@ impl Instruction {
 }
 
 impl Instruction {
-    pub fn from_line(line: &str) -> Result<Instruction, ParserError> {
+    pub fn from_line(line: &str) -> Result<Self, ParserError> {
         lazy_static! {
             static ref RE: Regex = Regex::new(r#"([a-z]+) ([a-z]+) (-?[0-9]+) if ([a-z]+) ([<>=!]+) (-?[0-9]+)"#).unwrap();
         }
@@ -110,7 +110,7 @@ impl Instruction {
         let condition_parameter = captures.get(6).unwrap().as_str().parse::<i32>().unwrap();
 
         let condition = Condition::from_string(condition_str, Register::from_string(condition_register_name), condition_parameter)?;
-        return Instruction::from_string(instruction_str, Register::from_string(register_name), parameter, condition);
+        Instruction::from_string(instruction_str, Register::from_string(register_name), parameter, condition)
     }
 
     pub fn all_used_registers(&self) -> HashSet<&Register> {
@@ -144,7 +144,7 @@ struct Machine {
 }
 
 impl Machine {
-    pub fn initialize(instructions: Vec<Instruction>) -> Machine {
+    pub fn initialize(instructions: Vec<Instruction>) -> Self {
         let ip: usize = 0;
         let mut registers: HashMap<Register, i32> = HashMap::new();
 
@@ -154,12 +154,12 @@ impl Machine {
             }
         }
 
-        return Machine {
+        Machine {
             instructions,
             registers,
             ip,
             peak: 0
-        };
+        }
     }
 
     pub fn run(&mut self) {
@@ -175,7 +175,7 @@ impl Machine {
     }
 
     fn get(&self, register: &Register) -> i32 {
-        return self.registers.get(register).unwrap().clone();
+        self.registers.get(register).unwrap().clone()
     }
 
     fn set(&mut self, register: &Register, value: i32) {

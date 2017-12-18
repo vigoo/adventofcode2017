@@ -43,10 +43,10 @@ fn process(input: &String) -> Result {
         }
     }
 
-    return Result {
+    Result {
         score,
         garbage_count
-    };
+    }
 }
 
 fn print_score(input: &str) {

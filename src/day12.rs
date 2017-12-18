@@ -10,19 +10,19 @@ struct Program {
 
 impl PartialEq for Program {
     fn eq(&self, other: &Program) -> bool {
-        return self.id == other.id;
+        self.id == other.id
     }
 }
 
 fn parse_program(s: &str) -> Program {
-    return Program { id: s.parse::<i32>().unwrap() };
+    Program { id: s.parse::<i32>().unwrap() }
 }
 
 fn parse_line(line: &str) -> (Program, HashSet<Program>) {
     let parts1: Vec<&str> = line.split("<->").collect();
     let targets: HashSet<Program> = parts1[1].split(',').map(|s| s.trim()).map(parse_program).collect();
 
-    return (parse_program(parts1[0].trim()), targets);
+    (parse_program(parts1[0].trim()), targets)
 }
 
 fn get_accessible_programs(connections: &HashMap<Program, HashSet<Program>>, from: Program) -> HashSet<Program> {
@@ -39,11 +39,11 @@ fn get_accessible_programs(connections: &HashMap<Program, HashSet<Program>>, fro
         visited.insert(current);
     }
 
-    return visited;
+    visited
 }
 
 fn count_accessible_programs(connections: &HashMap<Program, HashSet<Program>>) -> usize {
-    return get_accessible_programs(connections, Program { id: 0 }).len();
+    get_accessible_programs(connections, Program { id: 0 }).len()
 }
 
 fn count_components(connections: &HashMap<Program, HashSet<Program>>) -> usize {
@@ -60,7 +60,7 @@ fn count_components(connections: &HashMap<Program, HashSet<Program>>) -> usize {
         }
     }
 
-    return component_count;
+    component_count
 }
 
 pub fn run() {

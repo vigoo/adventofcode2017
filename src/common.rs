@@ -12,12 +12,14 @@ pub fn read_data(name: &str) -> String {
     let mut file = File::open(path).expect("Unable to open the file");
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Unable to read the file");
-    return contents;
+
+    contents
 }
 
 pub fn singleton<T: Eq + Hash>(value: T) -> HashSet<T> {
 
     let mut set = HashSet::new();
     set.insert(value);
-    return set;
+
+    set
 }
