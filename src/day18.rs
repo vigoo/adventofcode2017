@@ -241,7 +241,7 @@ mod part2 {
             match self.instructions[self.position] {
                 Instruction::Snd(ref value) => {
                     let evaluated_value = self.evaluate(value);
-                    self.sender.send(evaluated_value);
+                    self.sender.send(evaluated_value).ok();
                     self.send_counter = self.send_counter + 1;
                     self.position = self.position + 1;
                 },
@@ -311,14 +311,14 @@ mod part2 {
         let (send12, recv12) = mpsc::channel();
         let (send21, recv21) = mpsc::channel();
 
-        let mut thread1 = {
+        let thread1 = {
             let instructions1 = instructions.clone();
             thread::spawn(move || {
                 let mut machine1 = Machine::init(instructions1, 0, send12, recv21);
                 machine1.run();
             })
         };
-        let mut thread2 = {
+        let thread2 = {
             let instructions2 = instructions.clone();
             thread::spawn(move || {
                 let mut machine2 = Machine::init(instructions2, 1, send21, recv12);
@@ -326,8 +326,8 @@ mod part2 {
             })
         };
 
-        thread1.join();
-        thread2.join();
+        thread1.join().ok();
+        thread2.join().ok();
     }
 }
 
